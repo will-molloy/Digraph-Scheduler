@@ -86,6 +86,7 @@ public class SearchState implements Comparable<SearchState>, ISearchState{
         this.processors[this.lastVertex.getIndex()] = processorId;
         this.startTimes[this.lastVertex.getIndex()] = (int)time;
 
+        // nextP:  calculating the cost to set up priority
         int nextP = (int) (time + ((Double) this.lastVertex.getAttribute("Weight")) + ((Double) this.lastVertex.getAttribute("BL")));
 
         if(this.priority < nextP) {

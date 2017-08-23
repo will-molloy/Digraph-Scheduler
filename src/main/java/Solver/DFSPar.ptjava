@@ -1,0 +1,89 @@
+package Solver;
+
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.IntStream;
+
+import CommonInterface.ISearchState;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+
+import lombok.Data;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class DFSPar extends DFSolver{
+	
+	private static int bound = Integer.MAX_VALUE;
+	private static SearchState result;
+
+	private CopyOnWriteArrayList<Set<Node>> searchingTask = null;
+	
+	public DFSPar(Graph graph, int processorCount) {
+		super(graph, processorCount);
+	}
+
+	private void updateLog(SearchState s, int cost){
+		if (cost<bound){
+			bound = cost;
+			result = s;
+		}
+	}
+	
+	@Override
+	public void doSolve() {
+		SearchState.init(graph);
+		SearchState s = new SearchState();
+		solving(s);
+		scheduleVertices(result);
+	}
+	
+	private void solving(SearchState s){
+		Set<Node> legalVerticesSet = s.getLegalVertices();
+		for(int i =0; i < legalVerticesSet.size(); i++) {
+			
+			for(Iterator<Node> it = legalVerticesSet.iterator();it.hasNext();) {
+				Node v = it.next();
+				for(int processorC = 0; processorC<processorCount-1; i++) {
+					SearchState next = new SearchState(s, v, processorC);
+					if (next.getDfCost() > bound){
+						return;
+					}
+					if (next.getSize() == graph.getNodeCount()){
+						updateLog(next, next.getDfCost());
+						return;
+					}
+					recursiveSolve(next);
+				}
+			}
+			
+		}
+		
+	}
+	
+	TASK public void buildTask() {
+		
+	}
+	
+	TASK(*) public void (){}
+	
+	
+	public void parallelTask(Set<Node> set, SearchState s) {
+		for(Iterator<Node> it = set.iterator();it.hasNext();) {
+			Node v = it.next();
+			for(int processorC = 0; processorC<processorCount-1;processorC++) {
+				SearchState next = new SearchState(s, v, processorC);
+				if (next.getDfCos t() > bound){
+					return;
+				}
+				if (next.getSize() == graph.getNodeCount()){
+					updateLog(next, next.getDfCost());
+					return;
+				}
+				recursiveSolve(next);
+			}
+		}
+	}
+	
+}

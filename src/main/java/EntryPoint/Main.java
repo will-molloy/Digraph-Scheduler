@@ -15,6 +15,8 @@ import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
+import pt.runtime.ParaTask;
+
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.DefaultGraph;
 import org.graphstream.stream.file.FileSink;
@@ -62,7 +64,8 @@ public class Main {
             solver = new AStarSolverPar(g, procN);
         }
         else {
-            solver = new AStarSolver(g, procN);
+            //solver = new AStarSolver(g, procN);
+        	solver = new DFSolver(g,procN);
         }
         solver.doSolve();
 
@@ -79,6 +82,9 @@ public class Main {
 
     public static void main(String[] args) {
         Namespace ns = null;
+        
+        ParaTask.init();
+        
         ArgumentParser argumentParser = ArgumentParsers.newArgumentParser("HDNW")
                 .defaultHelp(true)
                 .description("A GPU Scheduling program");
