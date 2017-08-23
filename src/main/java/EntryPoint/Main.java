@@ -8,7 +8,9 @@ import Graph.Graph;
 import Graph.Vertex;
 import Solver.AStarSolver;
 import Solver.AStarSolverPar;
+import Solver.DFSPar;
 import Solver.DFSSolver;
+import Solver.DFSolver;
 import Util.Helper;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -50,7 +52,8 @@ public final class Main {
                 break;
             case BNB:
                 if (true) { // Change this when parallel is done
-                    solver = new DFSSolver(graph, procN);
+                    solver = new DFSPar(graph, procN, parN);
+//                    solver = new DFSolver(graph, procN, parN);
                 }
                 break;
                 // TODO, Make this a factory

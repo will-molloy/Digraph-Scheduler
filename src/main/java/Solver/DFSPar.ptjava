@@ -5,85 +5,65 @@ import java.util.Set;
 import java.util.stream.IntStream;
 
 import CommonInterface.ISearchState;
-
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
+import Graph.EdgeWithCost;
+import Graph.Vertex;
+import Graph.Graph;
 
 import lombok.Data;
+import pt.runtime.TaskID;
+
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DFSPar extends DFSolver{
 	
 	private static int bound = Integer.MAX_VALUE;
-	private static SearchState result;
-
-	private CopyOnWriteArrayList<Set<Node>> searchingTask = null;
+	private static SearchState currBestState;
+	private static int currUpperBound = Integer.MAX_VALUE;
 	
-	public DFSPar(Graph graph, int processorCount) {
-		super(graph, processorCount);
+	public DFSPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parNumber) {
+		super(graph, processorCount,parNumber);
 	}
 
-	private void updateLog(SearchState s, int cost){
-		if (cost<bound){
-			bound = cost;
-			result = s;
-		}
-	}
-	
+
 	@Override
 	public void doSolve() {
-		SearchState.init(graph);
-		SearchState s = new SearchState();
-		solving(s);
-		scheduleVertices(result);
+		SearchState.initialise(graph);
+		SearchState nullstate = new SearchState();
+		calculatingFirstLayerSearchingState(nullstate);
+		
+//		TaskID id= this.buildTask(nullstate);
+//		try {
+//			id.waitTillFinished();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		solving(nullstate);
+		
+		scheduleVertices(currBestState);
+	}
+	
+	TASK public void buildTask(SearchState state) {
+		solving(state);
 	}
 	
 	private void solving(SearchState s){
-		Set<Node> legalVerticesSet = s.getLegalVertices();
-		for(int i =0; i < legalVerticesSet.size(); i++) {
-			
-			for(Iterator<Node> it = legalVerticesSet.iterator();it.hasNext();) {
-				Node v = it.next();
-				for(int processorC = 0; processorC<processorCount-1; i++) {
-					SearchState next = new SearchState(s, v, processorC);
-					if (next.getDfCost() > bound){
-						return;
-					}
-					if (next.getSize() == graph.getNodeCount()){
-						updateLog(next, next.getDfCost());
-						return;
-					}
-					recursiveSolve(next);
-				}
-			}
-			
-		}
-		
-	}
-	
-	TASK public void buildTask() {
-		
-	}
-	
-	TASK(*) public void (){}
-	
-	
-	public void parallelTask(Set<Node> set, SearchState s) {
-		for(Iterator<Node> it = set.iterator();it.hasNext();) {
-			Node v = it.next();
-			for(int processorC = 0; processorC<processorCount-1;processorC++) {
+		Set<Vertex> legalVerticesSet = s.getLegalVertices();
+		for(Iterator<Vertex> it = legalVerticesSet.iterator();it.hasNext();) {
+			Vertex v = it.next();
+			for(int processorC = 0; processorC<processorCount; processorC++) {
 				SearchState next = new SearchState(s, v, processorC);
-				if (next.getDfCos t() > bound){
+				if (next.getUnderestimate() > currUpperBound){
 					return;
 				}
-				if (next.getSize() == graph.getNodeCount()){
-					updateLog(next, next.getDfCost());
+				if (next.getNumVertices() == graph.getVertices().size()){
+					updateLog(next);
 					return;
 				}
-				recursiveSolve(next);
+				solving(next);
 			}
 		}
 	}
+	
 	
 }
