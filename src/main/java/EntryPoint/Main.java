@@ -67,7 +67,8 @@ public final class Main {
 
     public static void main(String[] args) {
         Namespace ns = null;
-        ParaTask.init(); //initialise in parallel task
+		long start = System.currentTimeMillis();
+		System.out.println("Thread size: "+ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));
         ArgumentParser argumentParser = ArgumentParsers.newArgumentParser("Scheduler")
                 .defaultHelp(true)
                 .description("A GPU Scheduling program");
@@ -147,6 +148,8 @@ public final class Main {
         } else {
             callSolver(inputFile, procN, parN, algo, os);
         }
+        long time = System.currentTimeMillis() - start;
+        System.out.println("Total time: "+(time/1000.0)+" seconds.");
     }
 }
 

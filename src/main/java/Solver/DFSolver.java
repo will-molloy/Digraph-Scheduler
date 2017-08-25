@@ -44,9 +44,9 @@ public class DFSolver extends AbstractSolver {
 
 	/**
 	 *Will be used for parallel task.
-	 *Put in null state and return arraylist of search state which can be solved in parallel. 
+	 *Put in null state and return ConcurrentLinkedQueue of search state which can be solved in parallel. 
 	 *@Param SearchState
-	 *@return the fist layer of searching state 
+	 *@return the ConcurrentLinkedQueue of searching state 
 	 */
 	public void calculatingnNextLayerSearchingState(SearchState nullState) {
 		parallelTask.add(nullState);

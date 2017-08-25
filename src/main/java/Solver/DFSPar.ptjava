@@ -10,6 +10,7 @@ import Graph.Vertex;
 import Graph.Graph;
 
 import lombok.Data;
+import pt.runtime.CurrentTask;
 import pt.runtime.ParaTask;
 import pt.runtime.TaskID;
 
@@ -28,10 +29,13 @@ public class DFSPar extends DFSolver{
 		SearchState.initialise(graph);
 		SearchState nullstate = new SearchState();
 		calculatingnNextLayerSearchingState(nullstate);
-		ConcurrentLinkedQueue<SearchState> A = parallelTask;
 		
-		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ONEOFF, praNumber);
+		System.out.println("Thread size: "+praNumber);
 		
+		ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);
+
+		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI,4);
+		System.out.println("Thread size: "+ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));
 		TaskIDGroup g = this.buildTask(parallelTask);
 		
 		try {
