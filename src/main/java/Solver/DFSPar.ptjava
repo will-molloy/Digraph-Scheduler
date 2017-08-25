@@ -10,16 +10,13 @@ import Graph.Vertex;
 import Graph.Graph;
 
 import lombok.Data;
+import pt.runtime.ParaTask;
 import pt.runtime.TaskID;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DFSPar extends DFSolver{
-	
-	private static int bound = Integer.MAX_VALUE;
-	private static SearchState currBestState;
-	private static int currUpperBound = Integer.MAX_VALUE;
 	
 	public DFSPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parNumber) {
 		super(graph, processorCount,parNumber);
@@ -30,40 +27,29 @@ public class DFSPar extends DFSolver{
 	public void doSolve() {
 		SearchState.initialise(graph);
 		SearchState nullstate = new SearchState();
-		calculatingFirstLayerSearchingState(nullstate);
+		calculatingnNextLayerSearchingState(nullstate);
+		ConcurrentLinkedQueue<SearchState> A = parallelTask;
 		
-//		TaskID id= this.buildTask(nullstate);
-//		try {
-//			id.waitTillFinished();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		solving(nullstate);
+		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.ONEOFF, praNumber);
+		
+		TaskIDGroup g = this.buildTask(parallelTask);
+		
+		try {
+			g.waitTillFinished();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		scheduleVertices(currBestState);
 	}
 	
-	TASK public void buildTask(SearchState state) {
-		solving(state);
-	}
-	
-	private void solving(SearchState s){
-		Set<Vertex> legalVerticesSet = s.getLegalVertices();
-		for(Iterator<Vertex> it = legalVerticesSet.iterator();it.hasNext();) {
-			Vertex v = it.next();
-			for(int processorC = 0; processorC<processorCount; processorC++) {
-				SearchState next = new SearchState(s, v, processorC);
-				if (next.getUnderestimate() > currUpperBound){
-					return;
-				}
-				if (next.getNumVertices() == graph.getVertices().size()){
-					updateLog(next);
-					return;
-				}
-				solving(next);
-			}
+	TASK(*) public void buildTask(ConcurrentLinkedQueue<SearchState> states) {
+		SearchState currentState = null;
+		while((currentState = states.poll()) != null) {
+	        long id = Thread.currentThread().getId();
+            System.out.println("[thread "+id+"]");
+			solving(currentState);
 		}
 	}
-	
 	
 }
