@@ -68,7 +68,6 @@ public final class Main {
     public static void main(String[] args) {
         Namespace ns = null;
 		long start = System.currentTimeMillis();
-		System.out.println("Thread size: "+ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));
         ArgumentParser argumentParser = ArgumentParsers.newArgumentParser("Scheduler")
                 .defaultHelp(true)
                 .description("A GPU Scheduling program");
@@ -120,6 +119,8 @@ public final class Main {
         gui = ns.getBoolean("gui");
         procN = (int) ns.getList("processors").get(0);
         parN = (int) ns.getList("parallel").get(0);
+		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI,parN); //SET threadpoolsize
+		
         fileName = (String) ns.getList("infile").get(0);
         String outfile = ns.getString("outfile");
         String algoStr = ns.getString("algorithm");

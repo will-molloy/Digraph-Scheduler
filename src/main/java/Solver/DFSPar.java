@@ -25,6 +25,7 @@ import java.util.ArrayList;//####[18]####
 import java.util.List;//####[18]####
 //####[18]####
 public class DFSPar extends DFSolver {//####[20]####
+    static{ParaTask.init();}//####[20]####
     /*  ParaTask helper method to access private/protected slots *///####[20]####
     public void __pt__accessPrivateSlot(Method m, Object instance, TaskID arg, Object interResult ) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {//####[20]####
         if (m.getParameterTypes().length == 0)//####[20]####
@@ -37,92 +38,90 @@ public class DFSPar extends DFSolver {//####[20]####
 //####[22]####
     public DFSPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parNumber) {//####[22]####
         super(graph, processorCount, parNumber);//####[23]####
-    }//####[24]####
-//####[28]####
-    @Override//####[28]####
-    public void doSolve() {//####[28]####
-        SearchState.initialise(graph);//####[29]####
-        SearchState nullstate = new SearchState();//####[30]####
-        calculatingnNextLayerSearchingState(nullstate);//####[31]####
-        System.out.println("Thread size: " + praNumber);//####[33]####
-        ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);//####[35]####
-        ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI, 4);//####[37]####
-        System.out.println("Thread size: " + ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));//####[38]####
-        TaskIDGroup g = this.buildTask(parallelTask);//####[39]####
-        try {//####[41]####
-            g.waitTillFinished();//####[42]####
-        } catch (Exception e) {//####[43]####
-            e.printStackTrace();//####[44]####
-        }//####[45]####
-        scheduleVertices(currBestState);//####[47]####
-    }//####[48]####
-//####[50]####
-    private static volatile Method __pt__buildTask_ConcurrentLinkedQueueSearchState_method = null;//####[50]####
-    private synchronized static void __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet() {//####[50]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[50]####
-            try {//####[50]####
-                __pt__buildTask_ConcurrentLinkedQueueSearchState_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__buildTask", new Class[] {//####[50]####
-                    ConcurrentLinkedQueue.class//####[50]####
-                });//####[50]####
-            } catch (Exception e) {//####[50]####
-                e.printStackTrace();//####[50]####
-            }//####[50]####
-        }//####[50]####
-    }//####[50]####
-    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[50]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[50]####
-        return buildTask(states, new TaskInfo());//####[50]####
-    }//####[50]####
-    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states, TaskInfo taskinfo) {//####[50]####
-        // ensure Method variable is set//####[50]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[50]####
-            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[50]####
-        }//####[50]####
-        taskinfo.setParameters(states);//####[50]####
-        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[50]####
-        taskinfo.setInstance(this);//####[50]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[50]####
-    }//####[50]####
-    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states) {//####[50]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[50]####
-        return buildTask(states, new TaskInfo());//####[50]####
-    }//####[50]####
-    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[50]####
-        // ensure Method variable is set//####[50]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[50]####
-            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[50]####
-        }//####[50]####
-        taskinfo.setTaskIdArgIndexes(0);//####[50]####
-        taskinfo.addDependsOn(states);//####[50]####
-        taskinfo.setParameters(states);//####[50]####
-        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[50]####
-        taskinfo.setInstance(this);//####[50]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[50]####
-    }//####[50]####
-    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states) {//####[50]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[50]####
-        return buildTask(states, new TaskInfo());//####[50]####
-    }//####[50]####
-    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[50]####
-        // ensure Method variable is set//####[50]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[50]####
-            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[50]####
-        }//####[50]####
-        taskinfo.setQueueArgIndexes(0);//####[50]####
-        taskinfo.setIsPipeline(true);//####[50]####
-        taskinfo.setParameters(states);//####[50]####
-        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[50]####
-        taskinfo.setInstance(this);//####[50]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[50]####
-    }//####[50]####
-    public void __pt__buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[50]####
-        SearchState currentState = null;//####[51]####
-        while ((currentState = states.poll()) != null) //####[52]####
-        {//####[52]####
-            long id = Thread.currentThread().getId();//####[53]####
-            System.out.println("[thread " + id + "]");//####[54]####
-            solving(currentState);//####[55]####
-        }//####[56]####
-    }//####[57]####
-//####[57]####
-}//####[57]####
+    }//####[25]####
+//####[29]####
+    @Override//####[29]####
+    public void doSolve() {//####[29]####
+        SearchState.initialise(graph);//####[30]####
+        SearchState nullstate = new SearchState();//####[31]####
+        calculatingnNextLayerSearchingState(nullstate);//####[32]####
+        ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);//####[34]####
+        System.out.println("Thread size: " + ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));//####[35]####
+        TaskIDGroup g = this.buildTask(parallelTask);//####[36]####
+        try {//####[38]####
+            g.waitTillFinished();//####[39]####
+        } catch (Exception e) {//####[40]####
+            e.printStackTrace();//####[41]####
+        }//####[42]####
+        scheduleVertices(currBestState);//####[44]####
+    }//####[45]####
+//####[47]####
+    private static volatile Method __pt__buildTask_ConcurrentLinkedQueueSearchState_method = null;//####[47]####
+    private synchronized static void __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet() {//####[47]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[47]####
+            try {//####[47]####
+                __pt__buildTask_ConcurrentLinkedQueueSearchState_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__buildTask", new Class[] {//####[47]####
+                    ConcurrentLinkedQueue.class//####[47]####
+                });//####[47]####
+            } catch (Exception e) {//####[47]####
+                e.printStackTrace();//####[47]####
+            }//####[47]####
+        }//####[47]####
+    }//####[47]####
+    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[47]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[47]####
+        return buildTask(states, new TaskInfo());//####[47]####
+    }//####[47]####
+    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states, TaskInfo taskinfo) {//####[47]####
+        // ensure Method variable is set//####[47]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[47]####
+            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[47]####
+        }//####[47]####
+        taskinfo.setParameters(states);//####[47]####
+        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[47]####
+        taskinfo.setInstance(this);//####[47]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[47]####
+    }//####[47]####
+    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states) {//####[47]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[47]####
+        return buildTask(states, new TaskInfo());//####[47]####
+    }//####[47]####
+    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[47]####
+        // ensure Method variable is set//####[47]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[47]####
+            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[47]####
+        }//####[47]####
+        taskinfo.setTaskIdArgIndexes(0);//####[47]####
+        taskinfo.addDependsOn(states);//####[47]####
+        taskinfo.setParameters(states);//####[47]####
+        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[47]####
+        taskinfo.setInstance(this);//####[47]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[47]####
+    }//####[47]####
+    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states) {//####[47]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[47]####
+        return buildTask(states, new TaskInfo());//####[47]####
+    }//####[47]####
+    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[47]####
+        // ensure Method variable is set//####[47]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[47]####
+            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[47]####
+        }//####[47]####
+        taskinfo.setQueueArgIndexes(0);//####[47]####
+        taskinfo.setIsPipeline(true);//####[47]####
+        taskinfo.setParameters(states);//####[47]####
+        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[47]####
+        taskinfo.setInstance(this);//####[47]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[47]####
+    }//####[47]####
+    public void __pt__buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[47]####
+        SearchState currentState = null;//####[48]####
+        while ((currentState = states.poll()) != null) //####[49]####
+        {//####[49]####
+            long id = Thread.currentThread().getId();//####[50]####
+            System.out.println("[thread " + id + "]");//####[51]####
+            solving(currentState);//####[52]####
+        }//####[53]####
+    }//####[54]####
+//####[54]####
+}//####[54]####

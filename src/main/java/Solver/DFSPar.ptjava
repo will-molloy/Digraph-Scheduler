@@ -21,6 +21,7 @@ public class DFSPar extends DFSolver{
 	
 	public DFSPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parNumber) {
 		super(graph, processorCount,parNumber);
+		
 	}
 
 
@@ -30,11 +31,7 @@ public class DFSPar extends DFSolver{
 		SearchState nullstate = new SearchState();
 		calculatingnNextLayerSearchingState(nullstate);
 		
-		System.out.println("Thread size: "+praNumber);
-		
 		ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);
-
-		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI,4);
 		System.out.println("Thread size: "+ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));
 		TaskIDGroup g = this.buildTask(parallelTask);
 		
@@ -55,5 +52,7 @@ public class DFSPar extends DFSolver{
 			solving(currentState);
 		}
 	}
+	
+	
 	
 }

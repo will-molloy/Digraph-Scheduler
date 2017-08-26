@@ -1,6 +1,7 @@
 import Solver.AStarSolver;
 import Solver.AStarSolverPar;
 import Solver.AbstractSolver;
+import Solver.DFSPar;
 import Solver.DFSSolver;
 import TestCommon.CommonTester;
 import org.junit.Ignore;
@@ -43,7 +44,7 @@ public class TestMemoryUsage {
 
     @Parameters(name = "{0}") // tester.toString()
     public static Collection data() {
-        return Arrays.asList(new CommonTester(AStarSolver.class), new CommonTester(DFSSolver.class));
+        return Arrays.asList(new CommonTester(AStarSolver.class), new CommonTester(DFSSolver.class), new CommonTester(DFSPar.class));
     }
 
     @Ignore
