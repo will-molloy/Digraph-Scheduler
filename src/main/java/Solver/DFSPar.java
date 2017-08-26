@@ -51,117 +51,115 @@ public class DFSPar extends DFSolver {//####[20]####
         SearchState nullstate = new SearchState();//####[35]####
         calculatingnNextLayerSearchingState(nullstate);//####[36]####
         ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);//####[38]####
-        System.out.println("Thread size: " + ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));//####[39]####
-        TaskIDGroup g = this.buildTask(parallelTask);//####[40]####
-        try {//####[42]####
-            g.waitTillFinished();//####[43]####
-        } catch (Exception e) {//####[44]####
-            e.printStackTrace();//####[45]####
-        }//####[46]####
-        scheduleVertices();//####[48]####
-    }//####[49]####
-//####[56]####
-    private static volatile Method __pt__buildTask_ConcurrentLinkedQueueSearchState_method = null;//####[56]####
-    private synchronized static void __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet() {//####[56]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[56]####
-            try {//####[56]####
-                __pt__buildTask_ConcurrentLinkedQueueSearchState_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__buildTask", new Class[] {//####[56]####
-                    ConcurrentLinkedQueue.class//####[56]####
-                });//####[56]####
-            } catch (Exception e) {//####[56]####
-                e.printStackTrace();//####[56]####
-            }//####[56]####
-        }//####[56]####
-    }//####[56]####
+        TaskIDGroup g = this.buildTask(parallelTask);//####[39]####
+        try {//####[41]####
+            g.waitTillFinished();//####[42]####
+        } catch (Exception e) {//####[43]####
+            e.printStackTrace();//####[44]####
+        }//####[45]####
+        scheduleVertices();//####[47]####
+    }//####[48]####
+//####[55]####
+    private static volatile Method __pt__buildTask_ConcurrentLinkedQueueSearchState_method = null;//####[55]####
+    private synchronized static void __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet() {//####[55]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[55]####
+            try {//####[55]####
+                __pt__buildTask_ConcurrentLinkedQueueSearchState_method = ParaTaskHelper.getDeclaredMethod(new ParaTaskHelper.ClassGetter().getCurrentClass(), "__pt__buildTask", new Class[] {//####[55]####
+                    ConcurrentLinkedQueue.class//####[55]####
+                });//####[55]####
+            } catch (Exception e) {//####[55]####
+                e.printStackTrace();//####[55]####
+            }//####[55]####
+        }//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[56]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[56]####
-        return buildTask(states, new TaskInfo());//####[56]####
-    }//####[56]####
+	 *///####[55]####
+    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[55]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[55]####
+        return buildTask(states, new TaskInfo());//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states, TaskInfo taskinfo) {//####[56]####
-        // ensure Method variable is set//####[56]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[56]####
-            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[56]####
-        }//####[56]####
-        taskinfo.setParameters(states);//####[56]####
-        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[56]####
-        taskinfo.setInstance(this);//####[56]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[56]####
-    }//####[56]####
+	 *///####[55]####
+    public TaskIDGroup<Void> buildTask(ConcurrentLinkedQueue<SearchState> states, TaskInfo taskinfo) {//####[55]####
+        // ensure Method variable is set//####[55]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[55]####
+            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[55]####
+        }//####[55]####
+        taskinfo.setParameters(states);//####[55]####
+        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[55]####
+        taskinfo.setInstance(this);//####[55]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states) {//####[56]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[56]####
-        return buildTask(states, new TaskInfo());//####[56]####
-    }//####[56]####
+	 *///####[55]####
+    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states) {//####[55]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[55]####
+        return buildTask(states, new TaskInfo());//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[56]####
-        // ensure Method variable is set//####[56]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[56]####
-            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[56]####
-        }//####[56]####
-        taskinfo.setTaskIdArgIndexes(0);//####[56]####
-        taskinfo.addDependsOn(states);//####[56]####
-        taskinfo.setParameters(states);//####[56]####
-        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[56]####
-        taskinfo.setInstance(this);//####[56]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[56]####
-    }//####[56]####
+	 *///####[55]####
+    public TaskIDGroup<Void> buildTask(TaskID<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[55]####
+        // ensure Method variable is set//####[55]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[55]####
+            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[55]####
+        }//####[55]####
+        taskinfo.setTaskIdArgIndexes(0);//####[55]####
+        taskinfo.addDependsOn(states);//####[55]####
+        taskinfo.setParameters(states);//####[55]####
+        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[55]####
+        taskinfo.setInstance(this);//####[55]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states) {//####[56]####
-        //-- execute asynchronously by enqueuing onto the taskpool//####[56]####
-        return buildTask(states, new TaskInfo());//####[56]####
-    }//####[56]####
+	 *///####[55]####
+    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states) {//####[55]####
+        //-- execute asynchronously by enqueuing onto the taskpool//####[55]####
+        return buildTask(states, new TaskInfo());//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[56]####
-        // ensure Method variable is set//####[56]####
-        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[56]####
-            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[56]####
-        }//####[56]####
-        taskinfo.setQueueArgIndexes(0);//####[56]####
-        taskinfo.setIsPipeline(true);//####[56]####
-        taskinfo.setParameters(states);//####[56]####
-        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[56]####
-        taskinfo.setInstance(this);//####[56]####
-        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[56]####
-    }//####[56]####
+	 *///####[55]####
+    public TaskIDGroup<Void> buildTask(BlockingQueue<ConcurrentLinkedQueue<SearchState>> states, TaskInfo taskinfo) {//####[55]####
+        // ensure Method variable is set//####[55]####
+        if (__pt__buildTask_ConcurrentLinkedQueueSearchState_method == null) {//####[55]####
+            __pt__buildTask_ConcurrentLinkedQueueSearchState_ensureMethodVarSet();//####[55]####
+        }//####[55]####
+        taskinfo.setQueueArgIndexes(0);//####[55]####
+        taskinfo.setIsPipeline(true);//####[55]####
+        taskinfo.setParameters(states);//####[55]####
+        taskinfo.setMethod(__pt__buildTask_ConcurrentLinkedQueueSearchState_method);//####[55]####
+        taskinfo.setInstance(this);//####[55]####
+        return TaskpoolFactory.getTaskpool().enqueueMulti(taskinfo, -1);//####[55]####
+    }//####[55]####
     /**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 
 	 * @Param ConcurrentLinkedQueue<SearchState>
-	 *///####[56]####
-    public void __pt__buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[56]####
-        SearchState currentState = null;//####[57]####
-        while ((currentState = states.poll()) != null) //####[58]####
-        {//####[58]####
-            long id = Thread.currentThread().getId();//####[59]####
-            System.out.println("[thread " + id + "]");//####[60]####
-            solving(currentState);//####[61]####
-        }//####[62]####
-    }//####[63]####
-//####[63]####
-}//####[63]####
+	 *///####[55]####
+    public void __pt__buildTask(ConcurrentLinkedQueue<SearchState> states) {//####[55]####
+        SearchState currentState = null;//####[56]####
+        while ((currentState = states.poll()) != null) //####[57]####
+        {//####[57]####
+            long id = Thread.currentThread().getId();//####[58]####
+            solving(currentState);//####[59]####
+        }//####[60]####
+    }//####[61]####
+//####[61]####
+}//####[61]####

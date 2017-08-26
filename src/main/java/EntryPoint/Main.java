@@ -49,7 +49,7 @@ public final class Main {
     public static void main(String[] args) {
         org.apache.log4j.BasicConfigurator.configure();
         Namespace ns = null;
-		long start = System.currentTimeMillis();
+
         ArgumentParser argumentParser = ArgumentParsers.newArgumentParser("Scheduler")
                 .defaultHelp(true)
                 .description("A GPU Scheduling program");
@@ -95,6 +95,7 @@ public final class Main {
         gui = ns.getBoolean("v");
         procN = (int) ns.getList("processors").get(0);
         parN = (int) ns.getList("parallel").get(0);
+        
 		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI,parN); //SET threadpoolsize
 		
         fileName = (String) ns.getList("infile").get(0);

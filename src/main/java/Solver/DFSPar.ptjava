@@ -36,7 +36,6 @@ public class DFSPar extends DFSolver{
 		calculatingnNextLayerSearchingState(nullstate);
 		
 		ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);
-		System.out.println("Thread size: "+ParaTask.getThreadPoolSize(ParaTask.ThreadPoolType.MULTI));
 		TaskIDGroup g = this.buildTask(parallelTask);
 		
 		try {
@@ -57,7 +56,6 @@ public class DFSPar extends DFSolver{
 		SearchState currentState = null;
 		while((currentState = states.poll()) != null) {
 	        long id = Thread.currentThread().getId();
-            System.out.println("[thread "+id+"]");
 			solving(currentState);
 		}
 	}
