@@ -31,7 +31,7 @@ public class DFSPar extends DFSolver{
 
 	@Override
 	public void doSolve() {
-		SearchState.initialise(graph);
+		SearchState.initialise(graph,processorCount);
 		SearchState nullstate = new SearchState();
 		calculatingnNextLayerSearchingState(nullstate);
 		
@@ -45,7 +45,7 @@ public class DFSPar extends DFSolver{
 			e.printStackTrace();
 		}
 		
-		scheduleVertices(currBestState);
+		scheduleVertices();
 	}
 	
 	/**

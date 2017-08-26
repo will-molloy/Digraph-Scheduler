@@ -47,7 +47,7 @@ public class DFSPar extends DFSolver {//####[20]####
 //####[33]####
     @Override//####[33]####
     public void doSolve() {//####[33]####
-        SearchState.initialise(graph);//####[34]####
+        SearchState.initialise(graph, processorCount);//####[34]####
         SearchState nullstate = new SearchState();//####[35]####
         calculatingnNextLayerSearchingState(nullstate);//####[36]####
         ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);//####[38]####
@@ -58,7 +58,7 @@ public class DFSPar extends DFSolver {//####[20]####
         } catch (Exception e) {//####[44]####
             e.printStackTrace();//####[45]####
         }//####[46]####
-        scheduleVertices(currBestState);//####[48]####
+        scheduleVertices();//####[48]####
     }//####[49]####
 //####[56]####
     private static volatile Method __pt__buildTask_ConcurrentLinkedQueueSearchState_method = null;//####[56]####

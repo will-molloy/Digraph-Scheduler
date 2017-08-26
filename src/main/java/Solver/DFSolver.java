@@ -22,24 +22,22 @@ import pt.runtime.TaskID;
 public class DFSolver extends AbstractSolver {
 
 	protected static int currUpperBound = Integer.MAX_VALUE;
-	protected static SearchState currBestState;
-	protected int praNumber;
 
 	ConcurrentLinkedQueue<SearchState> parallelTask = new ConcurrentLinkedQueue<SearchState>();
 
 	public DFSolver(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int praNumber) {
 		super(graph, processorCount);
-		this.praNumber=praNumber;
+		this.parallelProcessorCount=praNumber;
 	}
 
 	@Override
 	public void doSolve() {
-		SearchState.initialise(graph);
+		SearchState.initialise(graph,processorCount);
 		SearchState nullstate = new SearchState();
 
 		solving(nullstate);
 
-		scheduleVertices(currBestState);
+		scheduleVertices();
 	}
 
 	/**
@@ -50,7 +48,7 @@ public class DFSolver extends AbstractSolver {
 	 */
 	public void calculatingnNextLayerSearchingState(SearchState nullState) {
 		parallelTask.add(nullState);
-		while(parallelTask.size()<praNumber) {
+		while(parallelTask.size()<parallelProcessorCount) {
 			int size = parallelTask.size();
 			for(int i = 0; i < size; i++) {
 

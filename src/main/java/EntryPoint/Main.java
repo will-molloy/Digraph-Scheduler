@@ -2,15 +2,15 @@ package EntryPoint;
 
 import CommonInterface.ISolver;
 import Exporter.GraphExporter;
-import GUI.SwingMain;
+import GUI.GUIMain;
 import Graph.EdgeWithCost;
 import Graph.Graph;
 import Graph.Vertex;
 import Solver.AStarSolver;
-import Solver.AStarSolverPar;
 import Solver.DFSPar;
 import Solver.DFSSolver;
 import Solver.DFSolver;
+import Solver.SolverFactory;
 import Util.Helper;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
@@ -27,9 +27,8 @@ import org.graphstream.stream.file.FileSourceDOT;
 import Graph.Vertex;
 import Graph.EdgeWithCost;
 
-import javax.swing.*;
 import java.io.*;
-import java.util.Arrays;
+import java.util.Collections;
 
 public final class Main {
 
@@ -37,28 +36,10 @@ public final class Main {
         //Ensure this class is not instantiated
     }
 
-    private enum Algo{AS, BNB}
-
-    private static void callSolver(File file, int procN, int parN, Algo algo, OutputStream os) {
+    private static void callSolver(File file, int procN, int parN, OutputStream os) {
         Graph<Vertex, EdgeWithCost<Vertex>> graph = Helper.fileToGraph(file);
-        ISolver solver = null;
-        switch(algo) {
-            case AS:
-                if (parN != 1) {
-                    solver = new AStarSolverPar(graph, procN);
-                } else {
-                    solver = new AStarSolver(graph, procN);
-                }
-                break;
-            case BNB:
-                if (true) { // Change this when parallel is done
-                    solver = new DFSPar(graph, procN, parN);
-//                    solver = new DFSolver(graph, procN, parN);
-                }
-                break;
-                // TODO, Make this a factory
-        }
-        solver.doSolve();
+        ISolver solver = new SolverFactory(graph, procN, parN).createSolver();
+        solver.doSolveAndCompleteSchedule();
 
         final GraphExporter<Vertex, EdgeWithCost<Vertex>> vertexEdgeWithCostGraphExporter;
         vertexEdgeWithCostGraphExporter = new GraphExporter<Vertex, EdgeWithCost<Vertex>>();
@@ -66,38 +47,34 @@ public final class Main {
     }
 
     public static void main(String[] args) {
+        org.apache.log4j.BasicConfigurator.configure();
         Namespace ns = null;
 		long start = System.currentTimeMillis();
         ArgumentParser argumentParser = ArgumentParsers.newArgumentParser("Scheduler")
                 .defaultHelp(true)
                 .description("A GPU Scheduling program");
-        argumentParser.addArgument("-g", "--gui")
-                .action(Arguments.storeTrue())
-                .help("Choose whether to use GUI(Not implemented at the moment)");
-        argumentParser.addArgument("-a", "--algorithm")
-                .choices("as", "bnb")
-                .setDefault("as")
-                .required(false)
-                .help("Choose the algorithm to use");
-        argumentParser.addArgument("-p", "--processors")
-                .metavar("N")
-                .required(true)
-                .type(Integer.class)
-                .nargs(1)
-                .help("Processor count");
-        argumentParser.addArgument("-r", "--parallel")
-                .metavar("M")
-                .type(Integer.class)
-                .nargs(1)
-                .setDefault(Arrays.asList(new Integer[]{1}))
-                .required(false)
-                .help("Use parallel processing");
         argumentParser.addArgument("infile")
                 .metavar("INFILENAME")
                 .nargs(1)
                 .required(true)
                 .help("Filename to process");
-        argumentParser.addArgument("outfile")
+        argumentParser.addArgument("processors")
+                .metavar("P")
+                .required(true)
+                .type(Integer.class)
+                .nargs(1)
+                .help("Processor count");
+        argumentParser.addArgument("-v")
+                .action(Arguments.storeTrue())
+                .help("Choose whether to use GUI");
+        argumentParser.addArgument("-p", "--parallel")
+                .metavar("M")
+                .type(Integer.class)
+                .nargs(1)
+                .setDefault(Collections.singletonList(1))
+                .required(false)
+                .help("Use parallel processing");
+        argumentParser.addArgument("-o")
                 .metavar("OUTFILENAME")
                 .nargs("?")
                 .required(false)
@@ -111,26 +88,24 @@ public final class Main {
         }
 
         int procN, parN;
-        String fileName, outfileName;
+        String fileName;
         OutputStream os = null;
         boolean gui;
-        Algo algo;
 
-        gui = ns.getBoolean("gui");
+        gui = ns.getBoolean("v");
         procN = (int) ns.getList("processors").get(0);
         parN = (int) ns.getList("parallel").get(0);
 		ParaTask.setThreadPoolSize(ParaTask.ThreadPoolType.MULTI,parN); //SET threadpoolsize
 		
         fileName = (String) ns.getList("infile").get(0);
         String outfile = ns.getString("outfile");
-        String algoStr = ns.getString("algorithm");
-        if(algoStr.matches("as")) algo = Algo.AS;
-        else algo = Algo.BNB;
+
         if (outfile == null) {
             os = new BufferedOutputStream(System.out);
         } else {
             try {
-                os = new FileOutputStream(new File(outfile));
+                File file = new File(outfile);
+                os = new FileOutputStream(file);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -141,16 +116,14 @@ public final class Main {
             System.err.println("Can't open file");
         }
 
+        Graph<Vertex, EdgeWithCost<Vertex>> graph = Helper.fileToGraph(inputFile);
+        ISolver solver = new SolverFactory(graph, procN, parN).createSolver();
         if (gui) {
-            Graph<Vertex, EdgeWithCost<Vertex>> graph = Helper.fileToGraph(inputFile);
-            ISolver solver = new Solver.AStarSolver(graph, procN);
-            SwingMain.init(graph, solver);
-            SwingUtilities.invokeLater(new SwingMain());
-        } else {
-            callSolver(inputFile, procN, parN, algo, os);
+            GUIMain.init(graph, solver);
+            new GUIMain().run();
         }
-        long time = System.currentTimeMillis() - start;
-        System.out.println("Total time: "+(time/1000.0)+" seconds.");
+        callSolver(inputFile, procN, parN, os);
+
     }
 }
 
