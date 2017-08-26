@@ -19,9 +19,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DFSPar extends DFSolver{
 	
+	/**
+	 * @author kzy0618
+	 * DFS B&B parallel solving class.
+	 * DFSPar can set size of the thread pool and it is thread safe
+	 */
 	public DFSPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parNumber) {
 		super(graph, processorCount,parNumber);
-		
 	}
 
 
@@ -44,6 +48,11 @@ public class DFSPar extends DFSolver{
 		scheduleVertices(currBestState);
 	}
 	
+	/**
+	 * @author kzy0618
+	 * Run solving state on different searchstate in separate thread 
+	 * @Param ConcurrentLinkedQueue<SearchState>
+	 */
 	TASK(*) public void buildTask(ConcurrentLinkedQueue<SearchState> states) {
 		SearchState currentState = null;
 		while((currentState = states.poll()) != null) {
