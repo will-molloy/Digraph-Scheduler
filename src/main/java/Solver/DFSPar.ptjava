@@ -33,6 +33,7 @@ public class DFSPar extends DFSolver{
 	public void doSolve() {
 		SearchState.initialise(graph,processorCount);
 		SearchState nullstate = new SearchState();
+		
 		calculatingnNextLayerSearchingState(nullstate);
 		
 		ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);

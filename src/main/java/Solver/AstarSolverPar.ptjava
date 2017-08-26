@@ -1,0 +1,27 @@
+package Solver;
+
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.IntStream;
+
+import CommonInterface.ISearchState;
+import Graph.EdgeWithCost;
+import Graph.Vertex;
+import Graph.Graph;
+
+import lombok.Data;
+import pt.runtime.CurrentTask;
+import pt.runtime.ParaTask;
+import pt.runtime.TaskID;
+import Datastructure.FastPriorityQueue;
+
+public final class AstarSolverPar extends AStarSolverReuseable{
+
+	private final Queue<SearchState> queue;
+
+	public AstarSolverPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parallelSize) {
+		super(graph,processorCount,parallelSize);
+	}
+
+	
+}
