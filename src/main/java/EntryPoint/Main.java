@@ -32,6 +32,9 @@ import java.util.Collections;
 
 public final class Main {
 
+    //used by gui output because FX is blocking
+    public static OutputStream os;
+
     private Main() {
         //Ensure this class is not instantiated
     }
@@ -89,7 +92,7 @@ public final class Main {
 
         int procN, parN;
         String fileName;
-        OutputStream os = null;
+        os = null;
         boolean gui;
 
         gui = ns.getBoolean("v");
@@ -122,7 +125,10 @@ public final class Main {
         if (gui) {
             GUIMain.init(graph, solver);
             new GUIMain().run();
+        } else {
+            callSolver(inputFile, procN, parN, os);
         }
+
         callSolver(inputFile, procN, parN, os);
 
     }

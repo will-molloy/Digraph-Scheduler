@@ -20,9 +20,10 @@ import java.util.List;
 
 /**
  * A Chart component represent the visualization of schedule. Codes are partially adapted from stackoverflow. Ref: https://stackoverflow.com/questions/27975898/gantt-chart-from-scratch
- * @author Edward Huang, Mason Shi
+ *
  * @param <X>
  * @param <Y>
+ * @author Edward Huang, Mason Shi
  */
 public class ScheduleChart<X, Y> extends XYChart<X, Y> {
 
@@ -182,9 +183,9 @@ public class ScheduleChart<X, Y> extends XYChart<X, Y> {
             this.length = lengthMs;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("-fx-background-color: linear-gradient(from 0% 0% to 100% 100%, ")
-                    .append(color+");\n")
+                    .append(color + ");\n")
                     .append("-fx-border-color: ")
-                    .append(borderColor+"\n")
+                    .append(borderColor + "\n")
                     .append("-fx-border-radius: 30deg;\n")
                     .append("-fx-border-style: solid inside;\n")
                     .append("-fx-border-width: 3px;");
