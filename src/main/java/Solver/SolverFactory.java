@@ -40,7 +40,8 @@ public class SolverFactory {
         // Getting data about the input
         int numEdges = (int) graph.getInwardEdgeMap().values().parallelStream().filter(List::isNotEmpty).count();
 
-        solver = new AstarSolverPar(graph, processorCount, parallelCount);
+//        solver = new AStarSolverReuseable(graph, processorCount,parallelCount);
+        solver = new DFSPar(graph, processorCount,parallelCount);
 //        if(parallelCount > 1) {
 //            // These decisions are in priority order
 //            if (processorCount == 1) { // BnB since upper bound is that of using one core (topological sort)

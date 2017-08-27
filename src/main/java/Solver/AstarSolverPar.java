@@ -34,8 +34,6 @@ public final class AstarSolverPar extends AStarSolverReuseable {//####[18]####
         else //####[18]####
             m.invoke(instance, arg, interResult);//####[18]####
     }//####[18]####
-//####[20]####
-    private final Queue<SearchState> queue;//####[20]####
 //####[22]####
     public AstarSolverPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parallelSize) {//####[22]####
         super(graph, processorCount, parallelSize);//####[23]####

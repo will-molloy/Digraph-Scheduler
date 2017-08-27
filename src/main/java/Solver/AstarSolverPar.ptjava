@@ -17,9 +17,10 @@ import Datastructure.FastPriorityQueue;
 
 public final class AstarSolverPar extends AStarSolverReuseable{
 
-	private final Queue<SearchState> queue;
+//	private final Queue<SearchState> queue;
 
-	public AstarSolverPar(Graph<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parallelSize) {
+	public AstarSolverPar(Grap
+			h<Vertex, EdgeWithCost<Vertex>> graph, int processorCount, int parallelSize) {
 		super(graph,processorCount,parallelSize);
 	}
 

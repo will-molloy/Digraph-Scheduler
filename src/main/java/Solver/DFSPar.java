@@ -49,14 +49,17 @@ public class DFSPar extends DFSolver {//####[20]####
     public void doSolve() {//####[33]####
         SearchState.initialise(graph, processorCount);//####[34]####
         SearchState nullstate = new SearchState();//####[35]####
-        calculatingnNextLayerSearchingState(nullstate);//####[37]####
-        ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);//####[39]####
-        TaskIDGroup g = this.buildTask(parallelTask);//####[40]####
+        calculatingnNextLayerSearchingState(nullstate);//####[36]####
+        currBestState = parallelTask.peek();//####[37]####
+        setTimer();//####[38]####
+        ParaTask.setScheduling(ParaTask.ScheduleType.WorkSharing);//####[40]####
+        TaskIDGroup solvingGroup = this.buildTask(parallelTask);//####[41]####
         try {//####[42]####
-            g.waitTillFinished();//####[43]####
+            solvingGroup.waitTillFinished();//####[43]####
         } catch (Exception e) {//####[44]####
             e.printStackTrace();//####[45]####
         }//####[46]####
+        updateTime();//####[47]####
         scheduleVertices();//####[48]####
     }//####[49]####
 //####[56]####

@@ -362,7 +362,8 @@ public class Controller implements GUIMainInterface {
 
 	@Synchronized
 	private void updateLabels(int[] startTimes, ISearchState searchState){
-        data.setTaskId(searchState.getLastVertex().getId());
+		data.setTaskId(searchState.getLastVertex().getId());
+
         data.setFinishingTime(startTimes[searchState.getLastVertex().getAssignedId()] + searchState.getLastVertex().getCost() + "");
     }
 
