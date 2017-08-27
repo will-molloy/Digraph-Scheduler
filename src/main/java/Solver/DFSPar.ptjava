@@ -48,6 +48,20 @@ public class DFSPar extends DFSolver{
 		scheduleVertices();
 	}
 	
+    SearchState completeSolve() {
+        currUpperBound = Integer.MAX_VALUE;
+        setTimer(); 
+        calculatingnNextLayerSearchingState(currBestState);
+        TaskIDGroup solvingGroup = this.buildTask(parallelTask);
+        try {
+			solvingGroup.waitTillFinished();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        updateTime();
+        return currBestState;
+    }
+	
 	/**
 	 * @author kzy0618
 	 * Run solving state on different searchstate in separate thread 

@@ -60,6 +60,14 @@ public class DFSolver extends AbstractSolver {
 	        }
 	}
 
+    SearchState completeSolve() {
+        currUpperBound = Integer.MAX_VALUE;
+        setTimer(); 
+        solving(currBestState);
+        updateTime();
+        return currBestState;
+    }
+    
 	/**
 	 *Will be used for parallel task.
 	 *Put in null state and return ConcurrentLinkedQueue of search state which can be solved in parallel. 
