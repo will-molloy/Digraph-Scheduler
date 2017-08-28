@@ -150,9 +150,21 @@
 			<version>3.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.square</groupId>
+			<artifactId>ptruntime</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 
 	</dependencies>
-
+	
+	<repositories>
+		<repository>
+			<id>local-maven-repo</id>
+			<url>file:///${project.parent.basedir}/src/main/resource</url>
+		</repository>
+	</repositories>
+	
 	<build>
 		<resources>
 			<resource>
@@ -268,31 +280,6 @@
 					<!-- Quasar Agent -->
 					<argLine>-javaagent:${co.paralleluniverse:quasar-core:jar}</argLine>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>install-external</id>
-						<phase>clean</phase>
-						<configuration>
-							<file>${basedir}/lib/PTJavaDoc-1.0.0.jar</file>
-							<file>${basedir}/lib/PTRuntime-1.0.0jar</file>
-							<file>${basedir}/PTSrc-1.0.0jar</file>
-							<repositoryLayout>default</repositoryLayout>
-							<groupId>com.dalong.locallib</groupId>
-							<artifactId>appbanner</artifactId>
-							<version>0.0.1</version>
-							<packaging>jar</packaging>
-							<generatePom>true</generatePom>
-						</configuration>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 
 
